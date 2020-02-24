@@ -126,9 +126,12 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:77b41d76c65540db4e597992bc8a6d66f09d9c31e330ecad2909897e58774d67"
+  digest = "1:85de60459a1ac1bd3b74958d805c4892f1c44648d5dc6c09d9a9fa2fcb57a833"
   name = "github.com/pastukhov-aleksandr/bookstore_utils-go"
-  packages = ["rest_errors"]
+  packages = [
+    "logger",
+    "rest_errors",
+  ]
   pruneopts = "UT"
   revision = "e5f5c17f10bd72091395a1eb4122130e4ab4ff51"
 
@@ -165,7 +168,7 @@
   revision = "2cfd321de3ee5d5f8a5fda2521d1703478334d98"
 
 [[projects]]
-  digest = "1:260048b6193e304ee294452a9e3410c474e3ce187248c7e2e4a2631207386f74"
+  digest = "1:7cf33d98a2a8d4ddb940ee365e1d93c334de32813767cf2e78bfb2774f6d78ec"
   name = "go.uber.org/zap"
   packages = [
     ".",
@@ -176,8 +179,8 @@
     "zapcore",
   ]
   pruneopts = "UT"
-  revision = "33e58d4d0120aa28d4df84cd244838c490846c9d"
-  version = "v1.13.0"
+  revision = "c89bd3c833f56cad3bc6dfa104b9c6d144526145"
+  version = "v1.14.0"
 
 [[projects]]
   branch = "master"
@@ -200,7 +203,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:048c2d9968a02665e815995397497caf0427a29789473b30cd21e209d5652328"
+  digest = "1:6c987c99d0278d185872430501897c2f78523b972e9a77b7ed62939e32c4a26d"
   name = "golang.org/x/tools"
   packages = [
     "go/analysis",
@@ -209,15 +212,17 @@
     "go/ast/inspector",
     "go/buildutil",
     "go/gcexportdata",
+    "go/internal/cgo",
     "go/internal/gcimporter",
     "go/internal/packagesdriver",
+    "go/loader",
     "go/packages",
     "go/types/objectpath",
     "go/types/typeutil",
     "internal/packagesinternal",
   ]
   pruneopts = "UT"
-  revision = "61798d64f0258df3b7b6e3667997eaebec9c0d99"
+  revision = "e1da425f72fd3793b579f4e74d908ba96eb16c8a"
 
 [[projects]]
   digest = "1:0e49ce3bb641491517ba5035619be50aa07619814665c9761d0decb48f35ea94"
@@ -236,38 +241,42 @@
   version = "v2.2.8"
 
 [[projects]]
-  digest = "1:131158a88aad1f94854d0aa21a64af2802d0a470fb0f01cb33c04fafd2047111"
+  digest = "1:735ae15b76858155230553ed0845ba4cc1dbb7c2ca665ab33bfd2eb1509b219c"
   name = "honnef.co/go/tools"
   packages = [
     "arg",
     "cmd/staticcheck",
+    "code",
     "config",
     "deprecated",
+    "edit",
     "facts",
     "functions",
     "go/types/typeutil",
     "internal/cache",
-    "internal/passes/buildssa",
+    "internal/passes/buildir",
     "internal/renameio",
+    "internal/robustio",
     "internal/sharedcheck",
+    "ir",
+    "ir/irutil",
     "lint",
     "lint/lintdsl",
     "lint/lintutil",
     "lint/lintutil/format",
     "loader",
+    "pattern",
     "printf",
+    "report",
     "simple",
-    "ssa",
-    "ssautil",
     "staticcheck",
-    "staticcheck/vrp",
     "stylecheck",
     "unused",
     "version",
   ]
   pruneopts = "UT"
-  revision = "afd67930eec2a9ed3e9b19f684d17a062285f16a"
-  version = "2019.2.3"
+  revision = "508b5eb18ee2f667ce06235ed383647038e2afc5"
+  version = "2020.1.3"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -276,9 +285,8 @@
     "github.com/gin-gonic/gin",
     "github.com/go-sql-driver/mysql",
     "github.com/pastukhov-aleksandr/bookstore_aouth-go/oauth",
+    "github.com/pastukhov-aleksandr/bookstore_utils-go/logger",
     "github.com/pastukhov-aleksandr/bookstore_utils-go/rest_errors",
-    "go.uber.org/zap",
-    "go.uber.org/zap/zapcore",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
