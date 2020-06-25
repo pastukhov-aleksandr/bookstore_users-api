@@ -9,12 +9,13 @@ type PublicUser struct {
 }
 
 type PrivateUser struct {
-	Id          int64  `json:"id"`
-	FirstName   string `json:"first_name"`
-	LastName    string `json:"last_name"`
-	Email       string `json:"email"`
-	DateCreated string `json:"date_created"`
-	Status      string `json:"status"`
+	Name         string `json:"name"`
+	Permission   string `json:"permission"`
+	Color        string `json:"color"`
+	Email        string `json:"email"`
+	Phone        string `json:"phone"`
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
 }
 
 func (users Users) Marshall(isPublic bool) []interface{} {
@@ -28,7 +29,7 @@ func (users Users) Marshall(isPublic bool) []interface{} {
 func (user *User) Marshall(isPublic bool) interface{} {
 	if isPublic {
 		return PublicUser{
-			Id:          user.Id,
+			Id:          user.ID,
 			DateCreated: user.DateCreated,
 			Status:      user.Status,
 		}
