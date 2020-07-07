@@ -15,7 +15,7 @@ import (
 
 const (
 	queryInsertUser             = "INSERT INTO users(name, email, date_created, status, password, phone, color) VALUES(?, ?, ?, ?, ?, ?, ?);"
-	queryGetUser                = "SELECT id, name, email, date_created, status FROM users WHERE id=?;"
+	queryGetUser                = "SELECT id, name, email, date_created, status, phone, color FROM users WHERE id=?;"
 	queryUpdateUser             = "UPDATE users SET name=?, email=? WHERE id=?;"
 	queryDeleteUser             = "DELETE FROM users WHERE id=?;"
 	queryFindByStatus           = "SELECT id, name, email, date_created, status FROM users WHERE status=?;"
@@ -27,7 +27,7 @@ func NewRepository() DbRepository {
 }
 
 type DbRepository interface {
-	Get(users.User) rest_errors.RestErr
+	Get(*users.User) rest_errors.RestErr
 	Save(users.User) rest_errors.RestErr
 	Update(users.User) rest_errors.RestErr
 	Delete(users.User) rest_errors.RestErr
@@ -38,7 +38,7 @@ type DbRepository interface {
 type dbRepository struct {
 }
 
-func (r *dbRepository) Get(user users.User) rest_errors.RestErr {
+func (r *dbRepository) Get(user *users.User) rest_errors.RestErr {
 	stmt, err := users_db.Client.Prepare(queryGetUser)
 	if err != nil {
 		logger.Error("error when trying to prepare get user statement", err)
@@ -47,11 +47,10 @@ func (r *dbRepository) Get(user users.User) rest_errors.RestErr {
 	defer stmt.Close()
 
 	result := stmt.QueryRow(user.ID)
-	if getErr := result.Scan(&user.ID, &user.Name, &user.Email, &user.DateCreated, &user.Status); getErr != nil {
+	if getErr := result.Scan(&user.ID, &user.Name, &user.Email, &user.DateCreated, &user.Status, &user.Phone, &user.Color); getErr != nil {
 		logger.Error("error when trying to  get user by id", getErr)
 		return rest_errors.NewInternalServerError("error when tying to get user", errors.New("database error"))
 	}
-
 	return nil
 }
 

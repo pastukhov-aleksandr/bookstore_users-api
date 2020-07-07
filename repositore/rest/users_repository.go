@@ -14,6 +14,7 @@ import (
 type RestUsersRepository interface {
 	Captcha(string, string) rest_errors.RestErr
 	CreateAccessToken(int64, string, int64) (*access_token.AccessToken, rest_errors.RestErr)
+	DeleteRefreshToken(int64, int64) rest_errors.RestErr
 }
 
 type AuthSuccess struct {
@@ -86,4 +87,23 @@ func (s *usersRepository) CreateAccessToken(UserID int64, UuID string, ClientID 
 	}
 
 	return &at, nil
+}
+
+func (s *usersRepository) DeleteRefreshToken(userID int64, clientID int64) rest_errors.RestErr {
+	request := access_token.AccessTokenRequest{
+		UserID:   userID,
+		ClientID: clientID,
+		UuID:     "",
+	}
+
+	client := resty.New()
+	_, err := client.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(request).
+		Post("http://localhost:8080/oauth/logout")
+
+	if err != nil {
+		return rest_errors.NewInternalServerError("invalid restclient response when trying to access token", errors.New("restclient error"))
+	}
+	return nil
 }

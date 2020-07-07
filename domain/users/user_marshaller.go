@@ -9,13 +9,10 @@ type PublicUser struct {
 }
 
 type PrivateUser struct {
-	Name         string `json:"name"`
-	Permission   string `json:"permission"`
-	Color        string `json:"color"`
-	Email        string `json:"email"`
-	Phone        string `json:"phone"`
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	Name  string `json:"name"`
+	Color string `json:"color"`
+	Email string `json:"email"`
+	Phone string `json:"phone"`
 }
 
 func (users Users) Marshall(isPublic bool) []interface{} {

@@ -9,4 +9,5 @@ type AccessTokenRequest struct {
 type AccessToken struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
+	Permission   string `json:"permission"`
 }

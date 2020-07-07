@@ -2,6 +2,7 @@ package users_service
 
 import (
 	"github.com/AvraamMavridis/randomcolor"
+	"github.com/pastukhov-aleksandr/bookstore_users-api/domain/access_token"
 	"github.com/pastukhov-aleksandr/bookstore_users-api/domain/users"
 	"github.com/pastukhov-aleksandr/bookstore_users-api/repositore/db"
 	"github.com/pastukhov-aleksandr/bookstore_users-api/repositore/rest"
@@ -17,7 +18,8 @@ type Service interface {
 	//UpdateUser(bool, users.User) (*users.User, rest_errors.RestErr)
 	//DeleteUser(int64) rest_errors.RestErr
 	//SearchUser(string) (users.Users, rest_errors.RestErr)
-	LoginUser(users.LoginRequest) (*users.User, rest_errors.RestErr)
+	LoginUser(users.LoginRequest) (*access_token.AccessToken, rest_errors.RestErr)
+	Logout(int64, int64) rest_errors.RestErr
 }
 
 type service struct {
@@ -34,10 +36,9 @@ func NewService(usersRepo rest.RestUsersRepository, dbRepo db.DbRepository) Serv
 
 func (s *service) GetUser(userID int64) (*users.User, rest_errors.RestErr) {
 	result := users.GetNewUsers(userID)
-	if err := s.dbRepo.Get(result); err != nil {
+	if err := s.dbRepo.Get(&result); err != nil {
 		return nil, err
 	}
-
 	return &result, nil
 }
 
@@ -62,7 +63,7 @@ func (s *service) CreateUser(user users.User) (*users.User, rest_errors.RestErr)
 	return &user, nil
 }
 
-func (s *service) LoginUser(request users.LoginRequest) (*users.User, rest_errors.RestErr) {
+func (s *service) LoginUser(request users.LoginRequest) (*access_token.AccessToken, rest_errors.RestErr) {
 	dao := &users.User{
 		Email:      request.Email,
 		Password:   crypto_utils.GetMd5(request.Password),
@@ -79,10 +80,17 @@ func (s *service) LoginUser(request users.LoginRequest) (*users.User, rest_error
 	if err != nil {
 		return nil, err
 	}
-	dao.AccessToken = at.AccessToken
-	dao.RefreshToken = at.RefreshToken
+	at.Permission = dao.Permission
 	//}
-	return dao, nil
+	return at, nil
+}
+
+func (s *service) Logout(userID int64, clientID int64) rest_errors.RestErr {
+	err := s.restUsersRepo.DeleteRefreshToken(userID, clientID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // func (s *service) UpdateUser(isPartial bool, user users.User) (*users.User, rest_errors.RestErr) {
