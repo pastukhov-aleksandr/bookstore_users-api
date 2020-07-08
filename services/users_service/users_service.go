@@ -20,6 +20,7 @@ type Service interface {
 	//SearchUser(string) (users.Users, rest_errors.RestErr)
 	LoginUser(users.LoginRequest) (*access_token.AccessToken, rest_errors.RestErr)
 	Logout(int64, int64) rest_errors.RestErr
+	Refresh(int64, int64) (*access_token.AccessToken, rest_errors.RestErr)
 }
 
 type service struct {
@@ -91,6 +92,23 @@ func (s *service) Logout(userID int64, clientID int64) rest_errors.RestErr {
 		return err
 	}
 	return nil
+}
+
+func (s *service) Refresh(userID int64, clientID int64) (*access_token.AccessToken, rest_errors.RestErr) {
+	// delete old refresh tokens
+	err := s.restUsersRepo.DeleteRefreshToken(userID, clientID)
+	if err != nil {
+		return nil, err
+	}
+
+	// creating new acsess token {
+	at, err := s.restUsersRepo.CreateAccessToken(userID, uuid.NewV4().String(), clientID)
+	if err != nil {
+		return nil, err
+	}
+	at.Permission = "aouth"
+	//}
+	return at, nil
 }
 
 // func (s *service) UpdateUser(isPartial bool, user users.User) (*users.User, rest_errors.RestErr) {

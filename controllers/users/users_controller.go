@@ -100,6 +100,36 @@ func (handler *usersHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, at)
 }
 
+func (handler *usersHandler) Logout(c *gin.Context) {
+	ad, err := oauth.AuthenticateRequest(c.Request, secret_code.Get_REFRESH_SECRET())
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, err)
+		return
+	}
+
+	err = handler.service.Logout(ad.UserID, ad.ClientID)
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+	c.JSON(http.StatusOK, "OK")
+}
+
+func (handler *usersHandler) Refresh(c *gin.Context) {
+	ad, err := oauth.AuthenticateRequest(c.Request, secret_code.Get_REFRESH_SECRET())
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, err)
+		return
+	}
+
+	at, err := handler.service.Refresh(ad.UserID, ad.ClientID)
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
+	}
+	c.JSON(http.StatusOK, at)
+}
+
 // func (handler *usersHandler) Update(c *gin.Context) {
 // 	userId, idErr := getUserId(c.Param("user_id"))
 // 	if idErr != nil {
@@ -153,35 +183,3 @@ func (handler *usersHandler) Login(c *gin.Context) {
 
 // 	c.JSON(http.StatusOK, users.Marshall(c.GetHeader("X-Public") == "true"))
 // }
-
-func (handler *usersHandler) Logout(c *gin.Context) {
-	ad, err := oauth.AuthenticateRequest(c.Request, secret_code.Get_REFRESH_SECRET())
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, err)
-		return
-	}
-
-	err = handler.service.Logout(ad.UserID, ad.ClientID)
-	if err != nil {
-		c.JSON(err.Status(), err)
-		return
-	}
-	c.JSON(http.StatusOK, "OK")
-}
-
-func (handler *usersHandler) Refresh(c *gin.Context) {
-	// ad, err := oauth.AuthenticateRequest(c.Request, secret_code.Get_REFRESH_SECRET())
-	// if err != nil {
-	// 	c.JSON(http.StatusUnauthorized, err)
-	// 	return
-	// }
-
-	// var request users.LoginRequest
-
-	// at, err := handler.service.LoginUser(request)
-	// if err != nil {
-	// 	c.JSON(err.Status(), err)
-	// 	return
-	// }
-	// c.JSON(http.StatusOK, at)
-}
